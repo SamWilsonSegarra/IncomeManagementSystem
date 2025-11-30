@@ -1,6 +1,5 @@
 #Written By: cedrick
 from tkinter import *
-#import customtkinter
 from tkinter.ttk import Combobox
 import matplotlib
 import matplotlib.pyplot as plt
@@ -11,10 +10,10 @@ import numpy as np
 import matplotlib.figure as mfig
 
 root = Tk()
-#MAINWINDOW Details
+#MAINWINDOW Details`
     #root.grid_propagate(False)
 root.geometry("1080x720")
-root.minsize(800,600)
+root.minsize(1080,720)
 ic0n = PhotoImage(file='coin.png')
 root.iconphoto(True, ic0n)
 root.title("Income Management System")
@@ -22,6 +21,7 @@ root.title("Income Management System")
 #SHARED FUNCTIONS, CLASSES, & VARIABLES
 varTimeSpan = StringVar()
 startDate = StringVar()
+netInc_data = []
 
 def validate_amount(text):
     if text == "":
@@ -77,8 +77,7 @@ menu_expEnt = Menu(root, tearoff=0)
 menu_expEnt.add_command(label="Delete Entry")
 def addExpense():
     parent = ExpScrollFrame.scrollable_frame
-    parent.grid_columnconfigure(0, weight=1)
-    parent.grid_columnconfigure(1, weight=1)
+    parent.grid_columnconfigure((0,1), weight=1)
     catExp = Entry(parent, font=("Calibri", 12), relief=SUNKEN, borderwidth=1)
     amtExp = Entry(parent, font=("Calibri", 12), relief=SUNKEN, borderwidth=1,
                    validate='key', validatecommand=vcmd)
@@ -109,8 +108,7 @@ menu_incEnt = Menu(root, tearoff=0)
 menu_incEnt.add_command(label="Delete Entry")
 def addIncome():
     parent = IncScrollFrame.scrollable_frame
-    parent.grid_columnconfigure(0, weight=1)
-    parent.grid_columnconfigure(1, weight=1)
+    parent.grid_columnconfigure((0,1), weight=1)
     catInc = Entry(parent, font=("Calibri", 12), relief=SUNKEN, borderwidth=1)
     amtInc = Entry(parent, font=("Calibri", 12), relief=SUNKEN, borderwidth=1,
                    validate='key', validatecommand=vcmd)
@@ -136,8 +134,23 @@ def deleteInc_row(record):
 
 
 #COMPARISON(LINE-CHART) FUNCTIONS
-#def lineGraph():
-    #body
+def GenResult():
+    parentG = grosTotSF.scrollable_frame
+    parentG.grid_columnconfigure((0,1), weight=1)
+    parentE = expTotSF.scrollable_frame
+    parentE.grid_columnconfigure((0, 1), weight=1)
+    parentN = netTotSF.scrollable_frame
+    parentN.grid_columnconfigure((0,1), weight=1)
+    grossTot_Cat = Label(parentG)
+    grossTot_Amt = Label(parentG)
+    expTot_Cat = Label(parentE)
+    expTot_Amt = Label(parentE)
+    netTot_Cat = Label(parentN)
+    netTot_Amt = Label(parentN)
+
+# -v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-
+# ***GRAPHIC USER INTERFACE CONFIGURATION***
+# -v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-
 
 #Main Menu
 Menubar = Menu(root, relief=RAISED, borderwidth=1)
@@ -235,17 +248,33 @@ PrevTp.pack(side=LEFT)
 #LineGraph Frame Widgets
 LabelLin1 = Label(LineFrame,text='Expense vs Income over a period of time:',font=("Calibri", 14))
 CanvChartLine = Canvas(LineFrame,bg='pink')
-chartL = Button(LineFrame,text='Generate Graph',font=("Calibri", 14))
-grossTotal = Frame(LineFrame,bg="yellow",width=200,height=100,relief=SUNKEN,borderwidth=2)
-expTotal = Frame(LineFrame,bg="yellow",width=200,height=100,relief=SUNKEN,borderwidth=2)
-netTotal = Frame(LineFrame,bg="yellow",width=200,height=100,relief=SUNKEN,borderwidth=2)
+genbutt_Frame = Frame(LineFrame,bg="red")
+genResult = Button(genbutt_Frame,text='Generate Results',font=("Calibri", 14))
+grosTotCont = Frame(LineFrame,bg="yellow",width=250,height=60,relief=SUNKEN,borderwidth=2)
+grosTotSF = ScrollFrame(grosTotCont, height=60)
+grossTotal = Label(grosTotCont,text='Total Gross Income: ',font=("Calibri", 12))
+expTotCont = Frame(LineFrame,bg="yellow",width=250,height=60,relief=SUNKEN,borderwidth=2)
+expTotSF = ScrollFrame(expTotCont, height=60)
+expTotal = Label(expTotCont,text='Total Expense: ',font=("Calibri", 12))
+netTotCont = Frame(LineFrame,bg="yellow",width=250,height=60,relief=SUNKEN,borderwidth=2)
+netTotSF = ScrollFrame(netTotCont, height=60)
+netTotal = Label(netTotCont,text='Total Net Income: ',font=("Calibri", 12))
 LabelLin1.grid(row=0,column=0,columnspan=2,sticky=N)
 CanvChartLine.grid(row=1,column=0,columnspan=2,padx=10,pady=10,sticky=NSEW)
-chartL.grid(row=2,column=0,columnspan=2,sticky=N)
-grossTotal.grid(row=3,column=0,columnspan=2,sticky=N)
-expTotal.grid(row=4,column=0,columnspan=2,sticky=N)
-netTotal.grid(row=5,column=0,columnspan=2,sticky=N)
-
+genbutt_Frame.grid(row=2,column=0,columnspan=2,padx=5,pady=2.5,sticky=NSEW)
+genResult.pack(side=TOP)
+grosTotCont.grid(row=3,column=0,columnspan=2,padx=10,sticky=NSEW)
+grosTotCont.grid_propagate(False)
+grosTotSF.pack(fill="both", expand=True)
+grossTotal.pack(fill="both", expand=True)
+expTotCont.grid(row=4,column=0,columnspan=2,padx=10,sticky=NSEW)
+expTotCont.grid_propagate(False)
+expTotSF.pack(fill="both", expand=True)
+expTotal.pack(fill="both", expand=True)
+netTotCont.grid(row=5,column=0,columnspan=2,padx=10,sticky=NSEW)
+netTotCont.grid_propagate(False)
+netTotSF.pack(fill="both", expand=True)
+netTotal.pack(fill="both", expand=True)
 
 
 
